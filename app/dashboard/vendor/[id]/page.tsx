@@ -187,10 +187,10 @@ export default async function VendorDetailPage({ params }: { params: Promise<{ i
 
               <div>
                 <div className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Message</div>
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <pre className="whitespace-pre-wrap font-light text-gray-700 dark:text-gray-200 bg-gray-50/50 dark:bg-gray-800/50 rounded-xl p-4 text-sm leading-relaxed">
+                <div className="bg-gray-50/50 dark:bg-gray-800/50 rounded-xl p-4">
+                  <p className="whitespace-pre-wrap break-words font-light text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
                     {outreach.emailBody}
-                  </pre>
+                  </p>
                 </div>
               </div>
 

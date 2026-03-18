@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
 
+import MobileNav from './MobileNav'
 import ThemeToggle from './ThemeToggle'
 import UserMenu from './UserMenu'
 
@@ -64,6 +65,9 @@ export default async function Header() {
                     Assistant
                   </Link>
                 </nav>
+
+                {/* Mobile Nav */}
+                <MobileNav />
 
                 {/* Theme Toggle */}
                 <ThemeToggle />

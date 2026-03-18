@@ -42,12 +42,12 @@ export default async function OutreachTrackingPage() {
   })
 
   const getStatusBadge = (o: (typeof outreach)[0]) => {
-    if (o.bounced) return { label: 'Bounced', color: 'red' as const }
-    if (o.replied) return { label: 'Responded', color: 'green' as const }
-    if (o.opened) return { label: 'Opened', color: 'blue' as const }
-    if (o.delivered) return { label: 'Delivered', color: 'purple' as const }
-    if (o.sentAt) return { label: 'Sent', color: 'gray' as const }
-    return { label: 'Pending', color: 'yellow' as const }
+    if (o.bounced) return { label: 'Bounced', color: 'red' as const, icon: '✕' }
+    if (o.replied) return { label: 'Responded', color: 'green' as const, icon: '✓' }
+    if (o.opened) return { label: 'Opened', color: 'blue' as const, icon: '◉' }
+    if (o.delivered) return { label: 'Delivered', color: 'purple' as const, icon: '→' }
+    if (o.sentAt) return { label: 'Sent', color: 'gray' as const, icon: '↑' }
+    return { label: 'Pending', color: 'yellow' as const, icon: '○' }
   }
 
   const getCategoryIcon = (category: VendorCategory) => {
@@ -224,6 +224,7 @@ export default async function OutreachTrackingPage() {
                             <span
                               className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium border ${colorClasses[status.color]}`}
                             >
+                              <span aria-hidden="true" className="mr-1">{status.icon}</span>
                               {status.label}
                             </span>
                           </td>

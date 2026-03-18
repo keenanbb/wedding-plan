@@ -299,7 +299,7 @@ export default function SignupPage() {
                     required
                     disabled={loading}
                     className="w-full px-4 py-3 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-xl text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-rose-300 dark:focus:ring-rose-500 focus:border-transparent transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    placeholder="Jane & John"
+                    placeholder="Your names"
                   />
                 </div>
 
@@ -421,11 +421,11 @@ export default function SignupPage() {
               {/* Terms */}
               <p className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400 font-light leading-relaxed">
                 By creating an account, you agree to our{' '}
-                <a href="#" className="text-purple-600 dark:text-purple-400 hover:underline">
+                <a href="/terms" className="text-purple-600 dark:text-purple-400 hover:underline">
                   Terms of Service
                 </a>{' '}
                 and{' '}
-                <a href="#" className="text-purple-600 dark:text-purple-400 hover:underline">
+                <a href="/privacy" className="text-purple-600 dark:text-purple-400 hover:underline">
                   Privacy Policy
                 </a>
               </p>
