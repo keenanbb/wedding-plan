@@ -21,46 +21,37 @@ export default async function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200/50 dark:border-gray-700/50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl transition-colors">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+    <header className="sticky top-0 z-50 border-b border-stone-200/60 dark:border-stone-800/60 bg-stone-50/90 dark:bg-gray-950/90 backdrop-blur-lg transition-colors">
+      <div className="max-w-5xl mx-auto px-6 py-3.5">
         <div className="flex items-center justify-between">
           {/* Logo / Brand */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-400 to-purple-400 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-xl font-serif font-medium">
-                <span className="bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-                  StreamWedding
-                </span>
-              </h1>
-            </div>
+          <Link href="/" className="flex items-center gap-2.5 group" aria-label="StreamWedding home">
+            <span className="font-display text-xl text-stone-900 dark:text-stone-100 group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors duration-200">
+              StreamWedding
+            </span>
           </Link>
 
           {/* Navigation & Auth */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1">
             {user && dbUser ? (
               <>
                 {/* Quick Nav Links */}
-                <nav className="hidden md:flex items-center gap-2">
+                <nav className="hidden md:flex items-center gap-0.5">
                   <Link
                     href="/dashboard"
-                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-colors"
+                    className="px-3.5 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-200"
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/vendors"
-                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-xl transition-colors"
+                    className="px-3.5 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-200"
                   >
                     Vendors
                   </Link>
                   <Link
                     href="/chat"
-                    className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-xl transition-colors"
+                    className="px-3.5 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-200"
                   >
                     Assistant
                   </Link>
@@ -68,6 +59,8 @@ export default async function Header() {
 
                 {/* Mobile Nav */}
                 <MobileNav />
+
+                <div className="hidden md:block w-px h-5 bg-stone-200 dark:bg-stone-800 mx-2" />
 
                 {/* Theme Toggle */}
                 <ThemeToggle />
@@ -85,31 +78,20 @@ export default async function Header() {
                 {/* Theme Toggle */}
                 <ThemeToggle />
 
-                {/* Not logged in - Show login button */}
+                <div className="w-px h-5 bg-stone-200 dark:bg-stone-800 mx-2" />
+
+                {/* Not logged in */}
+                <Link
+                  href="/auth/login"
+                  className="px-3.5 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-200"
+                >
+                  Sign in
+                </Link>
                 <Link
                   href="/dashboard"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-colors"
+                  className="px-5 py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 text-sm font-medium rounded-full hover:bg-stone-800 dark:hover:bg-white transition-colors duration-200"
                 >
-                  Start Planning
-                </Link>
-                <Link href="/auth/login" className="group relative inline-block">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-rose-400 to-purple-400 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity" />
-                  <div className="relative px-6 py-2.5 bg-gradient-to-r from-rose-400 via-pink-400 to-purple-400 text-white rounded-xl font-medium text-sm hover:shadow-lg transition-all duration-300 flex items-center gap-2">
-                    <span>Sign In</span>
-                    <svg
-                      className="w-4 h-4 group-hover:translate-x-0.5 transition-transform"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  </div>
+                  Get started
                 </Link>
               </>
             )}
