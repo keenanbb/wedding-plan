@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter, Cormorant_Garamond } from 'next/font/google'
+import { DM_Sans, DM_Serif_Display, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm-sans' })
+const dmSerif = DM_Serif_Display({ subsets: ['latin'], weight: '400', variable: '--font-dm-serif' })
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600'],
@@ -36,7 +37,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${cormorant.variable} font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}>{children}</body>
+      <body className={`${dmSans.variable} ${dmSerif.variable} ${cormorant.variable} font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}>{children}</body>
     </html>
   )
 }
