@@ -270,7 +270,7 @@ wedding-plan/
 
 **Status**: ✅ Production Ready (March 2026)
 
-**Live URL**: [wedding-plan-lime.vercel.app](https://wedding-plan-lime.vercel.app)
+**Live URL**: [wedding-plan-v2.vercel.app](https://wedding-plan-v2.vercel.app)
 
 **Coverage**:
 - **Newcastle, NSW** - 17 vendors
