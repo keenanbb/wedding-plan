@@ -38,77 +38,41 @@ export default function UserMenu({ user }: UserMenuProps) {
 
   return (
     <div className="relative">
-      {/* User Avatar Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 hover:border-amber-300 hover:shadow-lg dark:shadow-gray-900/30 transition-all duration-300 group"
+        className="w-8 h-8 rounded-full bg-stone-900 dark:bg-stone-200 flex items-center justify-center text-white dark:text-stone-900 text-xs font-medium hover:bg-stone-700 dark:hover:bg-white transition-colors"
+        aria-label="Account menu"
+        aria-expanded={isOpen}
       >
-        {/* Avatar */}
-        <div className="w-10 h-10 rounded-xl bg-stone-900 dark:bg-stone-100 flex items-center justify-center text-white font-medium shadow-md group-hover:scale-105 transition-transform">
-          {initials}
-        </div>
-
-        {/* User Info (hidden on mobile) */}
-        <div className="hidden md:block text-left">
-          <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name || 'Account'}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400 font-light">{user.email}</div>
-        </div>
-
-        {/* Chevron */}
-        <svg
-          className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        {initials}
       </button>
 
-      {/* Dropdown Menu */}
       {isOpen && (
         <>
-          {/* Backdrop */}
           <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
 
-          {/* Menu */}
-          <div className="absolute right-0 mt-2 w-64 bg-white/95 dark:bg-gray-800/95 rounded-2xl shadow-2xl dark:shadow-gray-900/30 border border-stone-200 dark:border-stone-800 overflow-hidden z-20 animate-fadeIn">
-            {/* User Info */}
-            <div className="p-4 border-b border-stone-100 dark:border-stone-800 bg-gradient-to-br from-amber-50/50 to-stone-100/50 dark:from-amber-950/20 dark:to-stone-800/20">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-stone-900 dark:bg-stone-100 flex items-center justify-center text-white font-medium text-lg shadow-md">
-                  {initials}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {user.name || 'Account'}
-                  </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-300 truncate font-light">{user.email}</div>
-                </div>
+          <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-800 overflow-hidden z-20 animate-fadeIn">
+            {/* User info */}
+            <div className="px-4 py-3 border-b border-stone-100 dark:border-stone-800">
+              <div className="text-sm font-medium text-stone-900 dark:text-stone-100 truncate">
+                {user.name || 'Account'}
+              </div>
+              <div className="text-xs text-stone-500 dark:text-stone-400 truncate mt-0.5">
+                {user.email}
               </div>
             </div>
 
-            {/* Logout */}
-            <div className="p-2">
+            {/* Sign out */}
+            <div className="p-1.5">
               <button
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed group"
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-md transition-colors disabled:opacity-50"
               >
-                <svg
-                  className="w-5 h-5 transition-colors"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                <span className="font-medium">{isLoggingOut ? 'Signing out...' : 'Sign out'}</span>
+                {isLoggingOut ? 'Signing out...' : 'Sign out'}
               </button>
             </div>
           </div>
