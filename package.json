@@ -34,6 +34,7 @@
     "db:create-test-user": "tsx scripts/create-test-user.ts",
     "db:create-auth-user": "tsx scripts/create-auth-user.ts",
     "db:seed:demo": "tsx scripts/seed-demo-data.ts",
+    "db:bootstrap": "tsx scripts/bootstrap-vendors.ts",
     "setup": "npm install && npm run db:push && npm run db:seed"
   },
   "dependencies": {
