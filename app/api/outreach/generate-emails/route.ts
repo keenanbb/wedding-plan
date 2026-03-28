@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { requireAuth } from '@/lib/auth-helpers'
+import { checkPaymentStatus } from '@/lib/payment'
 import { generateVendorEmail } from '@/lib/email/generate-vendor-email'
 import { validateArray } from '@/lib/input-validation'
 import { prisma } from '@/lib/prisma'
@@ -56,6 +57,15 @@ export async function POST(req: NextRequest) {
     // Verify ownership
     if (wedding.user.authId !== user.supabaseUser.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    // Require payment
+    const paymentStatus = checkPaymentStatus(wedding)
+    if (!paymentStatus.paid) {
+      return NextResponse.json(
+        { error: 'Payment required. Upgrade to send vendor emails.', requiresPayment: true },
+        { status: 402 }
+      )
     }
 
     // Get vendors

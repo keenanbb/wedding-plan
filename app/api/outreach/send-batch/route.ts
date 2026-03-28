@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { requireAuth } from '@/lib/auth-helpers'
+import { checkPaymentStatus } from '@/lib/payment'
 import { getResendClient, validateEmailConfig } from '@/lib/email/resend-client'
 import { getEnvVar } from '@/lib/env-validation'
 import { isValidEmail, validateArray } from '@/lib/input-validation'
@@ -78,6 +79,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Wedding not found or access denied' }, { status: 404 })
     }
 
+    // Require payment
+    const paymentStatus = checkPaymentStatus(wedding)
+    if (!paymentStatus.paid) {
+      return NextResponse.json(
+        { error: 'Payment required. Upgrade to send vendor emails.', requiresPayment: true },
+        { status: 402 }
+      )
+    }
+
     // Validate vendor emails before attempting to send
     const validEmails: EmailToSend[] = []
     const invalidEmails: { vendorId: string; error: string }[] = []
@@ -101,15 +111,54 @@ export async function POST(req: NextRequest) {
       }, { status: 400 })
     }
 
+    // Filter out vendors who have previously unsubscribed
+    const filteredEmails: EmailToSend[] = []
+    for (const email of validEmails) {
+      // Skip vendors who have unsubscribed from a previous outreach
+      const previousOutreach = await prisma.vendorOutreach.findFirst({
+        where: {
+          vendorId: email.vendorId,
+          unsubscribed: true,
+        },
+      })
+      if (previousOutreach) {
+        invalidEmails.push({ vendorId: email.vendorId, error: 'Vendor has unsubscribed from previous outreach' })
+        continue // Skip this vendor — they've opted out
+      }
+      filteredEmails.push(email)
+    }
+
     // Send batch emails via Resend
     // Note: Resend batch API accepts up to 100 emails at once
     const batchSize = 100
     const batches = []
 
-    for (let i = 0; i < validEmails.length; i += batchSize) {
-      const batch = validEmails.slice(i, i + batchSize)
+    for (let i = 0; i < filteredEmails.length; i += batchSize) {
+      const batch = filteredEmails.slice(i, i + batchSize)
       batches.push(batch)
     }
+
+    // Pre-create outreach records so we have IDs to embed in unsubscribe links
+    const outreachRecordMap = new Map<string, string>() // vendorId -> outreachId
+    await Promise.all(
+      filteredEmails.map(async email => {
+        const outreach = await prisma.vendorOutreach.create({
+          data: {
+            weddingId,
+            vendorId: email.vendorId,
+            emailSubject: email.subject,
+            emailBody: email.body,
+            emailId: null,
+            sentAt: new Date(),
+            delivered: false,
+            opened: false,
+            replied: false,
+            bounced: false,
+          },
+        })
+        outreachRecordMap.set(email.vendorId, outreach.id)
+      })
+    )
 
     // Map each email to its send result: { emailId, vendorId, success }
     const sendResults: { vendorId: string; emailId: string | null; error?: string }[] = []
@@ -126,18 +175,22 @@ export async function POST(req: NextRequest) {
         const batchResult = await withRetry(
           () =>
             resend.batch.send(
-              batch.map(email => ({
-                from: fromAddress,
-                replyTo: wedding.user.email,
-                to: email.vendorEmail,
-                subject: email.subject,
-                text: email.body,
-                tags: [
-                  { name: 'wedding_id', value: weddingId },
-                  { name: 'vendor_id', value: email.vendorId },
-                  { name: 'category', value: email.vendorCategory },
-                ],
-              }))
+              batch.map(email => {
+                const outreachId = outreachRecordMap.get(email.vendorId) || ''
+                const finalBody = email.body.replace('OUTREACH_ID_PLACEHOLDER', outreachId)
+                return {
+                  from: fromAddress,
+                  replyTo: wedding.user.email,
+                  to: email.vendorEmail,
+                  subject: email.subject,
+                  text: finalBody,
+                  tags: [
+                    { name: 'wedding_id', value: weddingId },
+                    { name: 'vendor_id', value: email.vendorId },
+                    { name: 'category', value: email.vendorCategory },
+                  ],
+                }
+              })
             ),
           { maxAttempts: 3, initialDelayMs: 1000, shouldRetry: isTransientError }
         )
@@ -174,26 +227,16 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Only create outreach records for emails that were actually sent
+    // Update outreach records with Resend email IDs for successfully sent emails
     const successfulSends = sendResults.filter(r => r.emailId !== null)
     const failedSends = sendResults.filter(r => r.emailId === null)
 
     const outreachRecords = await Promise.all(
       successfulSends.map(async result => {
-        const email = emails.find(e => e.vendorId === result.vendorId)!
-        return prisma.vendorOutreach.create({
-          data: {
-            weddingId,
-            vendorId: result.vendorId,
-            emailSubject: email.subject,
-            emailBody: email.body,
-            emailId: result.emailId,
-            sentAt: new Date(),
-            delivered: false,
-            opened: false,
-            replied: false,
-            bounced: false,
-          },
+        const outreachId = outreachRecordMap.get(result.vendorId)!
+        return prisma.vendorOutreach.update({
+          where: { id: outreachId },
+          data: { emailId: result.emailId },
         })
       })
     )

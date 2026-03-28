@@ -11,7 +11,6 @@ export default function MobileNav() {
   const links = [
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/vendors', label: 'Vendors' },
-    { href: '/chat', label: 'Assistant' },
   ]
 
   return (

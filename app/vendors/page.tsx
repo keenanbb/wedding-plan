@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import Header from '@/components/Header'
+import { UpgradeButton } from '@/components/UpgradeButton'
 import { VendorGrid } from '@/components/VendorGrid'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
@@ -34,6 +35,7 @@ export default async function VendorsPage() {
   }
 
   const wedding = dbUser.weddings[0]
+  const isPaid = wedding.paidAt !== null
 
   // Find matching vendors
   const matches = await findMatchingVendors({
@@ -202,6 +204,21 @@ export default async function VendorsPage() {
             }}
           />
         </div>
+
+        {/* Upgrade CTA for free users */}
+        {!isPaid && (
+          <div className="max-w-7xl mx-auto px-6 pb-12">
+            <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8 text-center">
+              <h3 className="text-xl font-serif text-stone-900 dark:text-stone-100 mb-2">
+                Ready to reach out?
+              </h3>
+              <p className="text-stone-500 dark:text-stone-400 mb-6 max-w-md mx-auto">
+                We&apos;ll write personalised emails to each vendor and send them on your behalf. Track every response from your dashboard.
+              </p>
+              <UpgradeButton weddingId={wedding.id} />
+            </div>
+          </div>
+        )}
       </div>
     </main>
   )

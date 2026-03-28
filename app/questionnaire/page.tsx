@@ -28,6 +28,7 @@ const STEPS = [
     type: 'select' as const,
     options: [
       { value: 'Sydney', label: 'Sydney & surrounds' },
+      { value: 'Newcastle', label: 'Newcastle' },
       { value: 'Blue Mountains', label: 'Blue Mountains' },
       { value: 'Hunter Valley', label: 'Hunter Valley' },
       { value: 'South Coast', label: 'South Coast' },
@@ -116,7 +117,7 @@ export default function QuestionnairePage() {
             }
 
             // Location - check if it's a preset value
-            const presetLocations = ['Sydney', 'Blue Mountains', 'Hunter Valley', 'South Coast']
+            const presetLocations = ['Sydney', 'Newcastle', 'Blue Mountains', 'Hunter Valley', 'South Coast']
             if (existing.location && !presetLocations.includes(existing.location)) {
               existingFormData.location = existing.location
             } else {
@@ -302,8 +303,8 @@ export default function QuestionnairePage() {
         throw new Error('Failed to save wedding data')
       }
 
-      // Redirect to dashboard
-      router.push('/dashboard')
+      // Redirect to vendor matches
+      router.push('/vendors')
       router.refresh()
     } catch (err) {
       console.error('Error saving wedding:', err)
