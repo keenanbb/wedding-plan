@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { requireAuth } from '@/lib/auth-helpers'
+import { checkPaymentStatus } from '@/lib/payment'
 import { getResendClient, validateEmailConfig } from '@/lib/email/resend-client'
 import { getEnvVar } from '@/lib/env-validation'
 import { isValidEmail, validateArray } from '@/lib/input-validation'
@@ -76,6 +77,15 @@ export async function POST(req: NextRequest) {
 
     if (!wedding || wedding.user.authId !== user.supabaseUser.id) {
       return NextResponse.json({ error: 'Wedding not found or access denied' }, { status: 404 })
+    }
+
+    // Require payment
+    const paymentStatus = checkPaymentStatus(wedding)
+    if (!paymentStatus.paid) {
+      return NextResponse.json(
+        { error: 'Payment required. Upgrade to send vendor emails.', requiresPayment: true },
+        { status: 402 }
+      )
     }
 
     // Validate vendor emails before attempting to send
