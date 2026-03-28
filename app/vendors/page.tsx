@@ -47,22 +47,19 @@ export default async function VendorsPage() {
   })
 
   // Flatten all matches into a single array with proper structure
+  const toMatch = (v: (typeof matches.venues)[number]) => ({
+    vendor: v,
+    score: v.matchScore,
+    reasons: v.matchReasons,
+  })
+
   const allMatches = [
-    ...matches.venues.map(v => ({
-      vendor: v,
-      score: v.matchScore,
-      reasons: v.matchReasons,
-    })),
-    ...matches.photographers.map(v => ({
-      vendor: v,
-      score: v.matchScore,
-      reasons: v.matchReasons,
-    })),
-    ...matches.caterers.map(v => ({
-      vendor: v,
-      score: v.matchScore,
-      reasons: v.matchReasons,
-    })),
+    ...matches.venues.map(toMatch),
+    ...matches.photographers.map(toMatch),
+    ...matches.caterers.map(toMatch),
+    ...matches.florists.map(toMatch),
+    ...matches.entertainment.map(toMatch),
+    ...matches.other.map(toMatch),
   ]
 
   return (

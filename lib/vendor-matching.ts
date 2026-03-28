@@ -20,6 +20,9 @@ export interface VendorMatches {
   venues: VendorMatch[]
   photographers: VendorMatch[]
   caterers: VendorMatch[]
+  florists: VendorMatch[]
+  entertainment: VendorMatch[]
+  other: VendorMatch[]
   totalMatches: number
 }
 
@@ -54,15 +57,21 @@ export async function findMatchingVendors(
 
   // Group by category
   const venues = scoredVendors.filter(v => v.category === 'VENUE').slice(0, 5)
-
   const photographers = scoredVendors.filter(v => v.category === 'PHOTOGRAPHER').slice(0, 5)
-
   const caterers = scoredVendors.filter(v => v.category === 'CATERING').slice(0, 5)
+  const florists = scoredVendors.filter(v => v.category === 'FLORIST').slice(0, 5)
+  const entertainment = scoredVendors.filter(v => v.category === 'ENTERTAINMENT').slice(0, 5)
+  const other = scoredVendors
+    .filter(v => !['VENUE', 'PHOTOGRAPHER', 'CATERING', 'FLORIST', 'ENTERTAINMENT'].includes(v.category))
+    .slice(0, 5)
 
   return {
     venues,
     photographers,
     caterers,
+    florists,
+    entertainment,
+    other,
     totalMatches: scoredVendors.length,
   }
 }
@@ -183,79 +192,3 @@ function getMatchReasons(vendor: Vendor, requirements: WeddingRequirements): str
   return reasons
 }
 
-/**
- * Format vendor matches for AI chat display
- */
-export function formatVendorMatchesForChat(matches: VendorMatches): string {
-  const { venues, photographers, caterers, totalMatches } = matches
-
-  let message = `Perfect! I found **${totalMatches} vendors** that match your wedding vision:\n\n`
-
-  if (venues.length > 0) {
-    message += `## 🏰 Venues (${venues.length})\n\n`
-    venues.forEach(v => {
-      message += `**${v.name}**\n`
-      message += `📍 ${v.location}`
-      if (v.maxGuests) message += ` • 👥 Up to ${v.maxGuests} guests`
-      if (v.priceMin && v.priceMax) {
-        message += ` • 💰 $${(v.priceMin / 1000).toFixed(0)}k-${(v.priceMax / 1000).toFixed(0)}k`
-      }
-      message += `\n${v.description.substring(0, 150)}...\n`
-      if (v.matchReasons.length > 0) {
-        message += `✨ ${v.matchReasons.join(' • ')}\n`
-      }
-      if (v.website) {
-        message += `🔗 [Visit Website](${v.website})`
-        if (v.phone) message += ` • 📞 ${v.phone}`
-        message += '\n'
-      }
-      message += '\n'
-    })
-  }
-
-  if (photographers.length > 0) {
-    message += `## 📸 Photographers (${photographers.length})\n\n`
-    photographers.forEach(v => {
-      message += `**${v.name}**\n`
-      message += `📍 ${v.location}`
-      if (v.priceMin && v.priceMax) {
-        message += ` • 💰 $${(v.priceMin / 1000).toFixed(1)}k-${(v.priceMax / 1000).toFixed(1)}k`
-      }
-      message += `\n${v.description.substring(0, 130)}...\n`
-      if (v.matchReasons.length > 0) {
-        message += `✨ ${v.matchReasons.join(' • ')}\n`
-      }
-      if (v.website) {
-        message += `🔗 [Visit Website](${v.website})`
-        if (v.phone) message += ` • 📞 ${v.phone}`
-        message += '\n'
-      }
-      message += '\n'
-    })
-  }
-
-  if (caterers.length > 0) {
-    message += `## 🍽️ Caterers (${caterers.length})\n\n`
-    caterers.forEach(v => {
-      message += `**${v.name}**\n`
-      message += `📍 ${v.location}`
-      if (v.priceMin && v.priceMax) {
-        message += ` • 💰 $${v.priceMin}-${v.priceMax}/person`
-      }
-      message += `\n${v.description.substring(0, 130)}...\n`
-      if (v.matchReasons.length > 0) {
-        message += `✨ ${v.matchReasons.join(' • ')}\n`
-      }
-      if (v.website) {
-        message += `🔗 [Visit Website](${v.website})`
-        if (v.phone) message += ` • 📞 ${v.phone}`
-        message += '\n'
-      }
-      message += '\n'
-    })
-  }
-
-  message += '\nWould you like me to reach out to any of these vendors on your behalf?'
-
-  return message
-}

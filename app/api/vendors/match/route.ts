@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { sanitizeString, validateGuestCount, validateBudget, validateArray } from '@/lib/input-validation'
-import { findMatchingVendors, formatVendorMatchesForChat } from '@/lib/vendor-matching'
+import { findMatchingVendors } from '@/lib/vendor-matching'
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,12 +32,8 @@ export async function POST(req: NextRequest) {
       preferences,
     })
 
-    // Format for chat display
-    const chatMessage = formatVendorMatchesForChat(matches)
-
     return NextResponse.json({
       matches,
-      chatMessage,
       success: true,
     })
   } catch (error) {
