@@ -134,7 +134,7 @@ export default function Home() {
               { value: '85+', label: 'Verified vendors' },
               { value: '5', label: 'NSW regions' },
               { value: '6', label: 'Vendor categories' },
-              { value: '100%', label: 'Free to use' },
+              { value: '$49', label: 'One-time fee' },
             ].map((stat, idx) => (
               <div key={idx}>
                 <div className="font-display text-3xl sm:text-4xl text-stone-900 dark:text-stone-100 mb-1">
@@ -194,7 +194,7 @@ export default function Home() {
             href="/dashboard"
             className="group inline-flex items-center gap-3 px-8 py-4 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 rounded-full text-base font-medium hover:bg-stone-800 dark:hover:bg-white transition-colors duration-200"
           >
-            Get started — it&apos;s free
+            Get started
             <svg
               className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
               fill="none"
