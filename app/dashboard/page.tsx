@@ -6,7 +6,10 @@ import WeddingSummaryCard from '@/components/WeddingSummaryCard'
 import { prisma } from '@/lib/prisma'
 import { createClient } from '@/lib/supabase/server'
 
-export default async function DashboardPage() {
+export default async function DashboardPage(props: { searchParams: Promise<{ payment?: string }> }) {
+  const searchParams = await props.searchParams
+  const paymentSuccess = searchParams?.payment === 'success'
+
   // Check authentication
   const supabase = await createClient()
   const {
@@ -85,6 +88,16 @@ export default async function DashboardPage() {
       </div>
 
       <div className="relative">
+        {paymentSuccess && (
+          <div className="max-w-7xl mx-auto px-6 pt-6">
+            <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl p-4">
+              <p className="text-sm text-green-700 dark:text-green-400">
+                Payment confirmed! You can now generate and send vendor emails.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="border-b border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-900">
           <div className="max-w-7xl mx-auto px-6 py-8">
