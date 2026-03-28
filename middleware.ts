@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   let response = await updateSession(request)
 
   // Protected routes - require authentication
-  const protectedRoutes = ['/dashboard', '/chat']
+  const protectedRoutes = ['/dashboard']
   const isProtectedRoute = protectedRoutes.some(route =>
     request.nextUrl.pathname.startsWith(route)
   )

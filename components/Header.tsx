@@ -49,12 +49,6 @@ export default async function Header() {
                   >
                     Vendors
                   </Link>
-                  <Link
-                    href="/chat"
-                    className="px-3.5 py-2 text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition-colors duration-200"
-                  >
-                    Assistant
-                  </Link>
                 </nav>
 
                 {/* Mobile Nav */}

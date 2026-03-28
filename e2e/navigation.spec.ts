@@ -10,12 +10,6 @@ test.describe('Navigation', () => {
     await expect(page).toHaveURL(/\/auth\/login/)
   })
 
-  test('unauthenticated user accessing /chat is redirected to login', async ({ page }) => {
-    await page.goto('/chat')
-
-    await expect(page).toHaveURL(/\/auth\/login/)
-  })
-
   test('unauthenticated user accessing /dashboard is redirected to login', async ({ page }) => {
     await page.goto('/dashboard')
 

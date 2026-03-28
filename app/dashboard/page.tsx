@@ -115,10 +115,10 @@ export default async function DashboardPage() {
                   Browse Vendors
                 </Link>
                 <Link
-                  href="/chat"
+                  href="/questionnaire"
                   className="px-4 py-2 text-sm font-medium text-amber-800 dark:text-amber-400 hover:text-amber-900 dark:hover:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/20 rounded-lg transition-colors"
                 >
-                  Chat Assistant
+                  Wedding Questionnaire
                 </Link>
               </div>
             </div>

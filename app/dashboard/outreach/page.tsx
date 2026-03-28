@@ -29,7 +29,7 @@ export default async function OutreachTrackingPage() {
   })
 
   if (!dbUser || dbUser.weddings.length === 0) {
-    redirect('/chat')
+    redirect('/questionnaire')
   }
 
   const wedding = dbUser.weddings[0]
