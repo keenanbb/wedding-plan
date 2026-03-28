@@ -48,6 +48,10 @@ model Wedding {
   status            WeddingStatus @default(INTAKE)
   chatCompleted     Boolean       @default(false)
 
+  // Payment
+  paidAt           DateTime?
+  stripeSessionId  String?
+
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 
@@ -170,6 +174,8 @@ model VendorOutreach {
   replied     Boolean   @default(false)
   repliedAt   DateTime?
   bounced     Boolean   @default(false)
+  unsubscribed   Boolean   @default(false)
+  unsubscribedAt DateTime?
 
   // Response
   responseEmail String?            @db.Text // Raw email response (if replied)
