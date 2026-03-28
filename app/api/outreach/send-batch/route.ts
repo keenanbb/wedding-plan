@@ -138,7 +138,8 @@ export async function POST(req: NextRequest) {
       batches.push(batch)
     }
 
-    // Pre-create outreach records so we have IDs to embed in unsubscribe links
+    // Pre-create outreach records so we have IDs to embed in unsubscribe links.
+    // sentAt is left null until we confirm Resend accepted the email.
     const outreachRecordMap = new Map<string, string>() // vendorId -> outreachId
     await Promise.all(
       filteredEmails.map(async email => {
@@ -149,7 +150,7 @@ export async function POST(req: NextRequest) {
             emailSubject: email.subject,
             emailBody: email.body,
             emailId: null,
-            sentAt: new Date(),
+            sentAt: null,
             delivered: false,
             opened: false,
             replied: false,
@@ -231,12 +232,13 @@ export async function POST(req: NextRequest) {
     const successfulSends = sendResults.filter(r => r.emailId !== null)
     const failedSends = sendResults.filter(r => r.emailId === null)
 
+    const sentAt = new Date()
     const outreachRecords = await Promise.all(
       successfulSends.map(async result => {
         const outreachId = outreachRecordMap.get(result.vendorId)!
         return prisma.vendorOutreach.update({
           where: { id: outreachId },
-          data: { emailId: result.emailId },
+          data: { emailId: result.emailId, sentAt },
         })
       })
     )
