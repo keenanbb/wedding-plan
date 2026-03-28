@@ -85,7 +85,11 @@ Do not include any other text before or after.`
       `Wedding Inquiry - ${new Date(wedding.weddingDate || Date.now()).toLocaleDateString('en-AU', { month: 'long', year: 'numeric' })}`
     const body = bodyMatch?.[1]?.trim() || generatedText
 
-    return { subject, body }
+    const unsubscribeUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://wedding-plan-v2.vercel.app'}/api/unsubscribe?token=OUTREACH_ID_PLACEHOLDER`
+
+    const footer = `\n\n---\nSent via Bower on behalf of a couple planning their wedding.\nIf you'd prefer not to receive inquiries like this, you can unsubscribe: ${unsubscribeUrl}`
+
+    return { subject, body: body + footer }
   } catch (error) {
     console.error('Error generating email with Claude:', error)
 
@@ -157,5 +161,9 @@ Looking forward to hearing from you!
 Best regards,
 ${userEmail}`
 
-  return { subject, body }
+  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://wedding-plan-v2.vercel.app'}/api/unsubscribe?token=OUTREACH_ID_PLACEHOLDER`
+
+  const footer = `\n\n---\nSent via Bower on behalf of a couple planning their wedding.\nIf you'd prefer not to receive inquiries like this, you can unsubscribe: ${unsubscribeUrl}`
+
+  return { subject, body: body + footer }
 }
