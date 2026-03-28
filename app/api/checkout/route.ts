@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Payment not configured' }, { status: 500 })
     }
 
-    const origin = req.headers.get('origin') || 'https://wedding-plan-v2.vercel.app'
+    const origin = req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'https://wedding-plan-v2.vercel.app'
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',

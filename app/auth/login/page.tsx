@@ -4,12 +4,13 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, FormEvent, Suspense } from 'react'
 
+import { validateRedirectUrl } from '@/lib/auth-helpers'
 import { createClient } from '@/lib/supabase/client'
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirect') || '/dashboard'
+  const redirectTo = validateRedirectUrl(searchParams.get('redirect'), '/dashboard')
   const urlError = searchParams.get('error')
 
   const [email, setEmail] = useState('')

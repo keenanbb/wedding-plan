@@ -21,17 +21,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'responseEmail is required' }, { status: 400 })
     }
 
-    // Get outreach record and verify ownership
-    const outreach = await prisma.vendorOutreach.findUnique({
-      where: { id: outreachId },
-      include: {
-        wedding: {
-          include: { user: true },
-        },
+    // Get outreach record and verify ownership (checked in query)
+    const outreach = await prisma.vendorOutreach.findFirst({
+      where: {
+        id: outreachId,
+        wedding: { userId: user.dbUser.id },
       },
     })
 
-    if (!outreach || outreach.wedding.user.authId !== user.supabaseUser.id) {
+    if (!outreach) {
       return NextResponse.json({ error: 'Outreach not found or access denied' }, { status: 404 })
     }
 

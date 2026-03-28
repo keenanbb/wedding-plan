@@ -44,19 +44,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Valid weddingId is required' }, { status: 400 })
     }
 
-    // Get wedding details
-    const wedding = await prisma.wedding.findUnique({
-      where: { id: weddingId },
+    // Get wedding details (ownership verified in query)
+    const wedding = await prisma.wedding.findFirst({
+      where: { id: weddingId, userId: user.dbUser.id },
       include: { user: true },
     })
 
     if (!wedding) {
       return NextResponse.json({ error: 'Wedding not found' }, { status: 404 })
-    }
-
-    // Verify ownership
-    if (wedding.user.authId !== user.supabaseUser.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     // Require payment
